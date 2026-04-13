@@ -69,7 +69,9 @@ export default function ApplyPage() {
   const [idCard, setIdCard] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneDuration, setPhoneDuration] = useState("");
-  const [socialUrl, setSocialUrl] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [tiktok, setTiktok] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [address, setAddress] = useState("");
   const [residenceType, setResidenceType] = useState("");
 
@@ -167,7 +169,7 @@ export default function ApplyPage() {
         jobType,
         workDuration,
         phoneDuration,
-        hasSocial: !!socialUrl,
+        hasSocial: !!(facebook || tiktok || instagram),
         hasStatement: !!stmtFile,
         hasWorkPhoto: !!workPhotoFile,
       });
@@ -187,7 +189,10 @@ export default function ApplyPage() {
           id_card: idCard,
           phone,
           phone_duration: phoneDuration,
-          social_url: socialUrl,
+          social_url: [facebook, tiktok, instagram].filter(Boolean).join(" | "),
+          facebook,
+          tiktok,
+          instagram,
           address,
           residence_type: residenceType,
           job_type: jobType,
@@ -403,8 +408,16 @@ export default function ApplyPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Social Media หลัก (URL/Username)</label>
-              <input className="input-field" value={socialUrl} onChange={(e) => setSocialUrl(e.target.value)} placeholder="Facebook, Line ID, IG..." />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Facebook</label>
+              <input className="input-field" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="ชื่อโปรไฟล์หรือ URL" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">TikTok</label>
+              <input className="input-field" value={tiktok} onChange={(e) => setTiktok(e.target.value)} placeholder="@username หรือ URL" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
+              <input className="input-field" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@username หรือ URL" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">ที่อยู่ปัจจุบัน *</label>
@@ -519,7 +532,19 @@ export default function ApplyPage() {
               </div>
             )}
 
-            <div className="flex items-start gap-2 mt-4">
+            {/* Contract terms */}
+            <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3 max-h-48 overflow-y-auto text-xs text-gray-600 space-y-2">
+              <p className="font-semibold text-gray-800">เงื่อนไขการผ่อนชำระ การผิดสัญญา และการสิ้นสุดสัญญา ภายใต้แพลตฟอร์ม ANGPAOPAY</p>
+              <p><strong>ข้อ 1</strong> ผู้เช่าซื้อมีหน้าที่ชำระเงินตามงวดและระยะเวลาที่กำหนดไว้ในสัญญา หากยกเลิกก่อนครบกำหนด ผู้ให้บริการมีสิทธิหักค่าเสื่อมราคา ค่าดำเนินการ และค่าความเสียหาย</p>
+              <p><strong>ข้อ 2</strong> ค้างชำระได้ไม่เกิน 3 วัน ค่าธรรมเนียมติดตามทวงถาม: ค้าง 1 งวด 50 บาท/รอบ, มากกว่า 1 งวด 100 บาท/รอบ, ติดตามภาคสนาม 400 บาท/ครั้ง ค้างเกิน 10 วันอาจถูกระงับการใช้งานอุปกรณ์ชั่วคราว ค่าปลดล็อค 800 บาท/ครั้ง</p>
+              <p><strong>ข้อ 3</strong> เมื่อบอกเลิกสัญญา ต้องส่งคืนทรัพย์สินในสภาพสมบูรณ์</p>
+              <p><strong>ข้อ 4</strong> ทรัพย์สินเป็นกรรมสิทธิ์ของผู้ให้บริการจนกว่าจะชำระครบ ห้ามโอน จำหน่าย จำนำ Root/Jailbreak หรือปลดล็อค MDM</p>
+              <p><strong>ข้อ 5</strong> หากสูญหาย/ถูกโจรกรรม ต้องแจ้งความภายใน 24 ชม. และส่งใบแจ้งความภายใน 3 วัน</p>
+              <p><strong>ข้อ 6</strong> ยินยอมให้เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลตาม พ.ร.บ. ทวงถามหนี้</p>
+              <p><strong>ข้อ 7-9</strong> ค่าดำเนินคดีตามจริง รับประกันไม่ครอบคลุมอุบัติเหตุ/ดัดแปลง เขตอำนาจศาลตามภูมิลำเนาผู้ให้บริการ</p>
+            </div>
+
+            <div className="flex items-start gap-2 mt-3">
               <input
                 type="checkbox"
                 id="agree"
@@ -528,7 +553,7 @@ export default function ApplyPage() {
                 className="mt-1 accent-[#C9252B]"
               />
               <label htmlFor="agree" className="text-sm text-gray-600">
-                ข้าพเจ้ายืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้ตรวจสอบข้อมูลเพื่อประกอบการพิจารณาสัญญาเช่าซื้อ
+                ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขสัญญาเช่าซื้อข้างต้น ยืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้ตรวจสอบข้อมูลเพื่อประกอบการพิจารณา
               </label>
             </div>
           </div>

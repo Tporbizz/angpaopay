@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --turbopack)",
+      "Bash(npx create-next-app@latest angpaopay-app --typescript --tailwind --eslint --app --src-dir --no-import-alias --turbopack)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "mcp__3b1110e8-680b-4a83-a318-365a081f575e__deploy_to_vercel",
+      "Bash(npm list:*)",
+      "Bash(vercel --yes)",
+      "Bash(vercel --yes --name angpaopay)",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__list_projects",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__get_cost",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__confirm_cost",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__create_project",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__pause_project",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__apply_migration",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__execute_sql",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__get_project_url",
+      "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__get_publishable_keys",
+      "Bash(vercel env:*)"
+    ]
+  }
+}

@@ -22,6 +22,9 @@ interface Application {
   phone: string;
   phone_duration: string;
   social_url: string;
+  facebook: string;
+  tiktok: string;
+  instagram: string;
   address: string;
   residence_type: string;
   community_bond: string;
@@ -206,16 +209,22 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
               <InfoRow label="เบอร์โทร" value={app.phone} />
               <InfoRow label="ใช้เบอร์มา" value={PHONE_LABELS[app.phone_duration] || app.phone_duration} />
               <InfoRow
-                label="Social Media"
-                value={
-                  app.social_url ? (
-                    <a href={app.social_url.startsWith("http") ? app.social_url : `https://${app.social_url}`} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">
-                      {app.social_url}
-                    </a>
-                  ) : (
-                    <span className="text-gray-400">ไม่ได้ระบุ</span>
-                  )
-                }
+                label="Facebook"
+                value={app.facebook ? (
+                  <a href={app.facebook.startsWith("http") ? app.facebook : `https://facebook.com/${app.facebook}`} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">{app.facebook}</a>
+                ) : <span className="text-gray-400">-</span>}
+              />
+              <InfoRow
+                label="TikTok"
+                value={app.tiktok ? (
+                  <a href={app.tiktok.startsWith("http") ? app.tiktok : `https://tiktok.com/@${app.tiktok.replace("@","")}`} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">{app.tiktok}</a>
+                ) : <span className="text-gray-400">-</span>}
+              />
+              <InfoRow
+                label="Instagram"
+                value={app.instagram ? (
+                  <a href={app.instagram.startsWith("http") ? app.instagram : `https://instagram.com/${app.instagram.replace("@","")}`} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">{app.instagram}</a>
+                ) : <span className="text-gray-400">-</span>}
               />
               <InfoRow label="ที่อยู่" value={app.address} />
               <InfoRow label="สถานะที่อยู่" value={RESIDENCE_LABELS[app.residence_type] || app.residence_type} />
