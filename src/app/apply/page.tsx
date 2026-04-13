@@ -350,37 +350,14 @@ export default function ApplyPage() {
             )}
 
             {selectedProduct && (
-              <>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">เงินดาวน์</label>
-                  <div className="flex gap-2">
-                    {DOWN_OPTIONS.map((d) => (
-                      <button
-                        key={d}
-                        className={`pill flex-1 ${downPct === d ? "active" : ""}`}
-                        onClick={() => setDownPct(d)}
-                      >
-                        {d * 100}%
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <p className="text-sm text-gray-500 mb-4">ผ่อนชำระ {FIXED_MONTHS} เดือน</p>
-
-                {pricing && (
-                  <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">ค่างวดต่อเดือน</p>
-                    <p className="text-4xl font-bold text-[#C9252B]">
-                      ฿{formatNumber(pricing.monthly)}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      ดาวน์ ฿{formatNumber(pricing.downAmt)} | {months} งวด
-                    </p>
-                    <p className="text-xs text-gray-400 mt-2">กดถัดไปเพื่อกรอกใบสมัคร</p>
-                  </div>
-                )}
-              </>
+              <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4 text-center mt-2">
+                <p className="text-sm text-gray-600 mb-1">ผ่อนเริ่มต้น {FIXED_MONTHS} เดือน</p>
+                <p className="text-4xl font-bold text-[#C9252B]">
+                  ฿{formatNumber(calculatePricing({ price: selectedProduct.price, downPct: 0.3, months: FIXED_MONTHS, rate: 0.015 }).monthly)}
+                  <span className="text-base text-gray-500 font-normal"> /เดือน</span>
+                </p>
+                <p className="text-xs text-gray-400 mt-2">กดถัดไปเพื่อกรอกใบสมัคร</p>
+              </div>
             )}
           </div>
         )}
@@ -483,7 +460,7 @@ export default function ApplyPage() {
         {/* STEP 4 */}
         {step === 4 && (
           <div className="space-y-4">
-            <div className="bg-red-50 border border-[#D4AF37]/30 rounded-lg p-3 text-sm text-orange-800">
+            <div className="bg-red-50 border border-[#D4AF37]/30 rounded-lg p-3 text-sm text-[#C9252B]">
               ยิ่งมีเอกสารมาก ยิ่งได้เงื่อนไขดีกว่า
             </div>
 
@@ -499,19 +476,17 @@ export default function ApplyPage() {
               />
             </div>
 
-            {stmtFile && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password เปิดไฟล์ (ถ้ามี)
-                </label>
-                <input
-                  className="input-field"
-                  value={stmtPassword}
-                  onChange={(e) => setStmtPassword(e.target.value)}
-                  placeholder="กรณีไฟล์ PDF มีรหัสผ่าน"
-                />
-              </div>
-            )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password เปิดไฟล์ Statement (ถ้ามี)
+              </label>
+              <input
+                className="input-field"
+                value={stmtPassword}
+                onChange={(e) => setStmtPassword(e.target.value)}
+                placeholder="กรณีไฟล์ PDF มีรหัสผ่าน"
+              />
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -525,25 +500,50 @@ export default function ApplyPage() {
               />
             </div>
 
-            {/* Summary quote */}
+            {/* Down payment selection */}
+            <div className="border-t pt-4 mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">เลือกเงินดาวน์</label>
+              <div className="flex gap-2">
+                {DOWN_OPTIONS.map((d) => (
+                  <button
+                    key={d}
+                    className={`pill flex-1 ${downPct === d ? "active" : ""}`}
+                    onClick={() => setDownPct(d)}
+                  >
+                    {d * 100}%
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quote - only show fees, no total */}
             {pricing && (
-              <div className="mt-6">
-                <h3 className="font-semibold text-gray-800 mb-3">สรุปค่าใช้จ่าย</h3>
-                <QuoteCard pricing={pricing} months={months} downPct={downPct} rate={rate} />
+              <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4">
+                <p className="text-sm text-gray-600 mb-1">ค่างวดต่อเดือน</p>
+                <p className="text-3xl font-bold text-[#C9252B] mb-3">
+                  ฿{formatNumber(pricing.monthly)}
+                  <span className="text-sm text-gray-500 font-normal"> /เดือน x {months} งวด</span>
+                </p>
+                <div className="space-y-1.5 text-sm text-gray-600">
+                  <div className="flex justify-between">
+                    <span>เงินดาวน์วันทำสัญญา ({downPct * 100}%)</span>
+                    <span className="font-medium">฿{formatNumber(pricing.downAmt)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>ค่าบริการเช่าใช้ทรัพย์สิน</span>
+                    <span>฿{formatNumber(pricing.hireFee)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>ค่าบริการรายเดือน</span>
+                    <span>฿{formatNumber(pricing.svcTotal)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>ค่าธรรมเนียมลงทะเบียน</span>
+                    <span>฿{formatNumber(pricing.registration)}</span>
+                  </div>
+                </div>
               </div>
             )}
-
-            {/* Contract terms */}
-            <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3 max-h-48 overflow-y-auto text-xs text-gray-600 space-y-2">
-              <p className="font-semibold text-gray-800">เงื่อนไขการผ่อนชำระ การผิดสัญญา และการสิ้นสุดสัญญา ภายใต้แพลตฟอร์ม ANGPAOPAY</p>
-              <p><strong>ข้อ 1</strong> ผู้เช่าซื้อมีหน้าที่ชำระเงินตามงวดและระยะเวลาที่กำหนดไว้ในสัญญา หากยกเลิกก่อนครบกำหนด ผู้ให้บริการมีสิทธิหักค่าเสื่อมราคา ค่าดำเนินการ และค่าความเสียหาย</p>
-              <p><strong>ข้อ 2</strong> ค้างชำระได้ไม่เกิน 3 วัน ค่าธรรมเนียมติดตามทวงถาม: ค้าง 1 งวด 50 บาท/รอบ, มากกว่า 1 งวด 100 บาท/รอบ, ติดตามภาคสนาม 400 บาท/ครั้ง ค้างเกิน 10 วันอาจถูกระงับการใช้งานอุปกรณ์ชั่วคราว ค่าปลดล็อค 800 บาท/ครั้ง</p>
-              <p><strong>ข้อ 3</strong> เมื่อบอกเลิกสัญญา ต้องส่งคืนทรัพย์สินในสภาพสมบูรณ์</p>
-              <p><strong>ข้อ 4</strong> ทรัพย์สินเป็นกรรมสิทธิ์ของผู้ให้บริการจนกว่าจะชำระครบ ห้ามโอน จำหน่าย จำนำ Root/Jailbreak หรือปลดล็อค MDM</p>
-              <p><strong>ข้อ 5</strong> หากสูญหาย/ถูกโจรกรรม ต้องแจ้งความภายใน 24 ชม. และส่งใบแจ้งความภายใน 3 วัน</p>
-              <p><strong>ข้อ 6</strong> ยินยอมให้เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลตาม พ.ร.บ. ทวงถามหนี้</p>
-              <p><strong>ข้อ 7-9</strong> ค่าดำเนินคดีตามจริง รับประกันไม่ครอบคลุมอุบัติเหตุ/ดัดแปลง เขตอำนาจศาลตามภูมิลำเนาผู้ให้บริการ</p>
-            </div>
 
             <div className="flex items-start gap-2 mt-3">
               <input
@@ -554,7 +554,7 @@ export default function ApplyPage() {
                 className="mt-1 accent-[#C9252B]"
               />
               <label htmlFor="agree" className="text-sm text-gray-600">
-                ข้าพเจ้าได้อ่านและยอมรับเงื่อนไขสัญญาเช่าซื้อข้างต้น ยืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้ตรวจสอบข้อมูลเพื่อประกอบการพิจารณา
+                ข้าพเจ้ายืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้ตรวจสอบข้อมูลเพื่อประกอบการพิจารณาสัญญาเช่าซื้อ
               </label>
             </div>
           </div>
@@ -599,50 +599,3 @@ export default function ApplyPage() {
   );
 }
 
-function QuoteCard({
-  pricing,
-  months,
-  downPct,
-  rate,
-}: {
-  pricing: ReturnType<typeof calculatePricing>;
-  months: number;
-  downPct: number;
-  rate: number;
-}) {
-  return (
-    <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4">
-      <p className="text-sm text-gray-600 mb-1">ค่างวดต่อเดือน</p>
-      <p className="text-3xl font-bold text-[#C9252B] mb-3">
-        ฿{formatNumber(pricing.monthly)}
-        <span className="text-sm text-gray-500 font-normal"> /เดือน</span>
-      </p>
-      <div className="space-y-1 text-sm text-gray-600">
-        <div className="flex justify-between">
-          <span>เงินดาวน์ ({downPct * 100}%)</span>
-          <span className="font-medium">฿{formatNumber(pricing.downAmt)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>ยอดคงเหลือ</span>
-          <span>฿{formatNumber(pricing.balance)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>ค่าบริการเช่าใช้ทรัพย์สิน ({rate * 100}%/เดือน x {months})</span>
-          <span>฿{formatNumber(pricing.hireFee)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>ค่าบริการรายเดือน (฿200 x {months})</span>
-          <span>฿{formatNumber(pricing.svcTotal)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>ค่าธรรมเนียมลงทะเบียน</span>
-          <span>฿{formatNumber(pricing.registration)}</span>
-        </div>
-        <div className="flex justify-between font-bold text-gray-800 border-t border-[#D4AF37]/30 pt-1 mt-1">
-          <span>ราคาเช่าซื้อรวมทั้งสิ้น</span>
-          <span>฿{formatNumber(pricing.total)}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
