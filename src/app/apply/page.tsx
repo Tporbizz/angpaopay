@@ -246,7 +246,7 @@ export default function ApplyPage() {
               แจ้งรหัสอ้างอิงของคุณใน LINE OA
             </p>
             <a
-              href="https://line.me/R/ti/p/@angpaopay"
+              href="https://lin.ee/Q7JSFmm"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
