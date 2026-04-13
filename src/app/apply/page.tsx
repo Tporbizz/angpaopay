@@ -216,7 +216,16 @@ export default function ApplyPage() {
         .single();
 
       if (error) throw error;
-      setSuccess(data.id.slice(0, 8).toUpperCase());
+      const refCode = data.id.slice(0, 8).toUpperCase();
+
+      // Notify admin via ntfy
+      fetch("https://ntfy.sh/angpaopay-notify", {
+        method: "POST",
+        headers: { Title: "ใบสมัครใหม่!", Priority: "high", Tags: "moneybag" },
+        body: `${name}\n${selectedProduct.name} ฿${formatNumber(selectedProduct.price)}\nดาวน์ ${downPct * 100}% ผ่อน ฿${formatNumber(pricing.monthly)}/เดือน\nรหัส: AP-${refCode}`,
+      }).catch(() => {});
+
+      setSuccess(refCode);
     } catch (err) {
       console.error(err);
       alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
