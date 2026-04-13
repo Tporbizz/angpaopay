@@ -351,7 +351,7 @@ export default function ApplyPage() {
 
             {selectedProduct && (
               <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4 text-center mt-2">
-                <p className="text-sm text-gray-600 mb-1">ผ่อนเริ่มต้น {FIXED_MONTHS} เดือน</p>
+                <p className="text-sm text-gray-600 mb-1">ผ่อนเริ่มต้น</p>
                 <p className="text-4xl font-bold text-[#C9252B]">
                   ฿{formatNumber(calculatePricing({ price: selectedProduct.price, downPct: 0.3, months: FIXED_MONTHS, rate: 0.015 }).monthly)}
                   <span className="text-base text-gray-500 font-normal"> /เดือน</span>
@@ -516,17 +516,17 @@ export default function ApplyPage() {
               </div>
             </div>
 
-            {/* Quote - only show fees, no total */}
+            {/* Quote - fees only, no rates/months/total */}
             {pricing && (
               <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4">
                 <p className="text-sm text-gray-600 mb-1">ค่างวดต่อเดือน</p>
                 <p className="text-3xl font-bold text-[#C9252B] mb-3">
                   ฿{formatNumber(pricing.monthly)}
-                  <span className="text-sm text-gray-500 font-normal"> /เดือน x {months} งวด</span>
+                  <span className="text-sm text-gray-500 font-normal"> /เดือน</span>
                 </p>
                 <div className="space-y-1.5 text-sm text-gray-600">
                   <div className="flex justify-between">
-                    <span>เงินดาวน์วันทำสัญญา ({downPct * 100}%)</span>
+                    <span>เงินดาวน์วันทำสัญญา</span>
                     <span className="font-medium">฿{formatNumber(pricing.downAmt)}</span>
                   </div>
                   <div className="flex justify-between">
