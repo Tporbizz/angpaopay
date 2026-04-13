@@ -50,6 +50,8 @@ interface Application {
   staff_note: string;
   approved_at: string;
   approved_by: string;
+  service_fee_monthly: number;
+  registration_fee: number;
 }
 
 const JOB_LABELS: Record<string, string> = {
@@ -128,6 +130,8 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
     downPct: app.down_pct,
     months: app.months,
     rate: finalRate,
+    serviceFeeMonthly: app.service_fee_monthly ?? 200,
+    registrationFee: app.registration_fee ?? 800,
   });
 
   function getScoreColor(score: number) {

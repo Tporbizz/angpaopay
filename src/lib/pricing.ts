@@ -3,6 +3,8 @@ export interface PricingInput {
   downPct: number; // 0.15, 0.20, 0.25, 0.30
   months: number; // 6, 9, 12, 18
   rate: number; // monthly rate as decimal e.g. 0.015, 0.03, 0.05
+  serviceFeeMonthly?: number; // from settings, default 200
+  registrationFee?: number; // from settings, default 800
 }
 
 export interface PricingResult {
@@ -16,13 +18,13 @@ export interface PricingResult {
 }
 
 export function calculatePricing(input: PricingInput): PricingResult {
-  const { price, downPct, months, rate } = input;
+  const { price, downPct, months, rate, serviceFeeMonthly = 200, registrationFee = 800 } = input;
 
   const downAmt = Math.round(price * downPct);
   const balance = price - downAmt;
   const hireFee = Math.round(balance * rate * months);
-  const svcTotal = 200 * months; // service fee per month
-  const registration = 800;
+  const svcTotal = serviceFeeMonthly * months;
+  const registration = registrationFee;
   const total = balance + hireFee + svcTotal + registration;
   const monthly = Math.round(total / months);
 

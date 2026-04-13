@@ -63,6 +63,8 @@ export default function ApplyPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [downPct, setDownPct] = useState(0.3);
   const [rates, setRates] = useState<Record<string, number>>({ "0.25": 0.03, "0.30": 0.015, "0.40": 0.015, "0.50": 0.01 });
+  const [serviceFeeMonthly, setServiceFeeMonthly] = useState(200);
+  const [registrationFee, setRegistrationFee] = useState(800);
   const months = FIXED_MONTHS;
 
   // Step 2
@@ -102,10 +104,16 @@ export default function ApplyPage() {
   useEffect(() => {
     Promise.all([
       supabase.from("products").select("*").eq("active", true).order("sort_order"),
-      supabase.from("settings").select("*").eq("key", "rates").single(),
-    ]).then(([prodRes, rateRes]) => {
+      supabase.from("settings").select("*"),
+    ]).then(([prodRes, settingsRes]) => {
       if (prodRes.data) setProducts(prodRes.data);
-      if (rateRes.data) setRates(rateRes.data.value as Record<string, number>);
+      if (settingsRes.data) {
+        settingsRes.data.forEach((row: { key: string; value: unknown }) => {
+          if (row.key === "rates") setRates(row.value as Record<string, number>);
+          if (row.key === "service_fee_monthly") setServiceFeeMonthly(Number(row.value));
+          if (row.key === "registration_fee") setRegistrationFee(Number(row.value));
+        });
+      }
       setLoading(false);
     });
   }, []);
@@ -120,7 +128,7 @@ export default function ApplyPage() {
 
   const rate = rates[downPct.toFixed(2)] ?? rates[String(downPct)] ?? 0.03;
   const pricing = selectedProduct
-    ? calculatePricing({ price: selectedProduct.price, downPct, months, rate })
+    ? calculatePricing({ price: selectedProduct.price, downPct, months, rate, serviceFeeMonthly, registrationFee })
     : null;
 
   const validateStep = (s: number): boolean => {
@@ -210,6 +218,8 @@ export default function ApplyPage() {
           stmt_url: stmtUrl,
           stmt_password: stmtPassword,
           work_photo_url: workPhotoUrl,
+          service_fee_monthly: serviceFeeMonthly,
+          registration_fee: registrationFee,
           auto_score: autoScore,
           total_score: autoScore,
           status: "pending",
@@ -369,7 +379,7 @@ export default function ApplyPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                 {filteredProducts.map((p) => {
                   // Estimate: 30% down, 1.5%/month, 12 months
-                  const est = calculatePricing({ price: p.price, downPct: 0.3, months: 12, rate: 0.015 });
+                  const est = calculatePricing({ price: p.price, downPct: 0.3, months: 12, rate: 0.015, serviceFeeMonthly, registrationFee });
                   return (
                     <button
                       key={p.id}
@@ -397,7 +407,7 @@ export default function ApplyPage() {
               <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4 text-center mt-2">
                 <p className="text-sm text-gray-600 mb-1">ผ่อนเริ่มต้น</p>
                 <p className="text-4xl font-bold text-[#C9252B]">
-                  ฿{formatNumber(calculatePricing({ price: selectedProduct.price, downPct: 0.3, months: FIXED_MONTHS, rate: 0.015 }).monthly)}
+                  ฿{formatNumber(calculatePricing({ price: selectedProduct.price, downPct: 0.3, months: FIXED_MONTHS, rate: 0.015, serviceFeeMonthly, registrationFee }).monthly)}
                   <span className="text-base text-gray-500 font-normal"> /เดือน</span>
                 </p>
                 <p className="text-xs text-gray-400 mt-2">กดถัดไปเพื่อกรอกใบสมัคร</p>
@@ -602,23 +612,29 @@ export default function ApplyPage() {
                   เงินดาวน์วันทำสัญญา <span className="font-semibold">฿{formatNumber(pricing.downAmt)}</span>
                 </p>
                 <p className="text-xs text-gray-400">
-                  รวมค่าบริการเช่าใช้ทรัพย์สิน ค่าบริการรายเดือน และค่าธรรมเนียมลงทะเบียนเรียบร้อยแล้ว
+                  รวมค่าบริการเช่าใช้ทรัพย์สิน ค่าบริการรายเดือน และค่าธรรมเนียมลงทะเบียนแล้ว
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  * ยอดคำนวณโดยประมาณ ตัวเลขจริงอาจเปลี่ยนแปลงเล็กน้อยตามผลการพิจารณาเครดิตของผู้สมัคร
                 </p>
               </div>
             )}
 
-            <div className="flex items-start gap-2 mt-3">
+            <label
+              htmlFor="agree"
+              className="flex items-center gap-3 mt-4 p-4 rounded-xl border border-gray-200 bg-white cursor-pointer active:bg-gray-50"
+            >
               <input
                 type="checkbox"
                 id="agree"
                 checked={agree}
                 onChange={(e) => setAgree(e.target.checked)}
-                className="mt-1 accent-[#C9252B]"
+                className="w-5 h-5 flex-shrink-0 accent-[#C9252B]"
               />
-              <label htmlFor="agree" className="text-sm text-gray-600">
-                ข้าพเจ้ายืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้ตรวจสอบข้อมูลเพื่อประกอบการพิจารณาสัญญาเช่าซื้อ
-              </label>
-            </div>
+              <span className="text-sm text-gray-600">
+                ข้าพเจ้ายืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้เก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลเพื่อประกอบการพิจารณาสัญญาเช่าซื้อ
+              </span>
+            </label>
           </div>
         )}
       </div>
