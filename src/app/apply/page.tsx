@@ -143,50 +143,23 @@ export default function ApplyPage() {
     setSubmitting(true);
 
     try {
-      let idCardFrontUrl = "";
-      let idCardBackUrl = "";
-      let stmtUrl = "";
-      let workPhotoUrl = "";
+      const uid = crypto.randomUUID().slice(0, 8);
 
-      if (idCardFrontFile) {
-        const ext = idCardFrontFile.name.split(".").pop();
-        const path = `id-cards/${Date.now()}-front.${ext}`;
-        const { error } = await supabase.storage.from("documents").upload(path, idCardFrontFile);
-        if (!error) {
-          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
-          idCardFrontUrl = urlData.publicUrl;
-        }
+      async function uploadFile(file: File, folder: string, suffix: string = "") {
+        const ext = file.name.split(".").pop();
+        const path = `${folder}/${uid}${suffix}.${ext}`;
+        const { error } = await supabase.storage.from("documents").upload(path, file, { upsert: true });
+        if (error) { console.error("Upload error:", folder, error); return ""; }
+        const { data } = supabase.storage.from("documents").getPublicUrl(path);
+        return data.publicUrl;
       }
 
-      if (idCardBackFile) {
-        const ext = idCardBackFile.name.split(".").pop();
-        const path = `id-cards/${Date.now()}-back.${ext}`;
-        const { error } = await supabase.storage.from("documents").upload(path, idCardBackFile);
-        if (!error) {
-          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
-          idCardBackUrl = urlData.publicUrl;
-        }
-      }
-
-      if (stmtFile) {
-        const ext = stmtFile.name.split(".").pop();
-        const path = `statements/${Date.now()}.${ext}`;
-        const { error } = await supabase.storage.from("documents").upload(path, stmtFile);
-        if (!error) {
-          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
-          stmtUrl = urlData.publicUrl;
-        }
-      }
-
-      if (workPhotoFile) {
-        const ext = workPhotoFile.name.split(".").pop();
-        const path = `work-photos/${Date.now()}.${ext}`;
-        const { error } = await supabase.storage.from("documents").upload(path, workPhotoFile);
-        if (!error) {
-          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
-          workPhotoUrl = urlData.publicUrl;
-        }
-      }
+      const [idCardFrontUrl, idCardBackUrl, stmtUrl, workPhotoUrl] = await Promise.all([
+        idCardFrontFile ? uploadFile(idCardFrontFile, "id-cards", "-front") : Promise.resolve(""),
+        idCardBackFile ? uploadFile(idCardBackFile, "id-cards", "-back") : Promise.resolve(""),
+        stmtFile ? uploadFile(stmtFile, "statements") : Promise.resolve(""),
+        workPhotoFile ? uploadFile(workPhotoFile, "work-photos") : Promise.resolve(""),
+      ]);
 
       const autoScore = calculateAutoScore({
         income: parseInt(income),
@@ -255,9 +228,10 @@ export default function ApplyPage() {
       }).catch(() => {});
 
       setSuccess(refCode);
-    } catch (err) {
-      console.error(err);
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+    } catch (err: unknown) {
+      console.error("Submit error:", err);
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      alert(`เกิดข้อผิดพลาด: ${msg}`);
     } finally {
       setSubmitting(false);
     }
