@@ -14,7 +14,7 @@ interface Product {
 }
 
 const DOWN_OPTIONS = [0.15, 0.2, 0.25, 0.3];
-const MONTH_OPTIONS = [6, 9, 12, 18];
+const FIXED_MONTHS = 12;
 
 const JOB_OPTIONS = [
   { value: "government", label: "ข้าราชการ/รัฐวิสาหกิจ" },
@@ -62,7 +62,7 @@ export default function ApplyPage() {
   const [categoryFilter, setCategoryFilter] = useState("iphone");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [downPct, setDownPct] = useState(0.2);
-  const [months, setMonths] = useState(12);
+  const months = FIXED_MONTHS;
 
   // Step 2
   const [name, setName] = useState("");
@@ -366,20 +366,7 @@ export default function ApplyPage() {
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">จำนวนงวด</label>
-                  <div className="flex gap-2">
-                    {MONTH_OPTIONS.map((m) => (
-                      <button
-                        key={m}
-                        className={`pill flex-1 ${months === m ? "active" : ""}`}
-                        onClick={() => setMonths(m)}
-                      >
-                        {m} เดือน
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <p className="text-sm text-gray-500 mb-4">ผ่อนชำระ {FIXED_MONTHS} เดือน</p>
 
                 {pricing && (
                   <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4 text-center">
