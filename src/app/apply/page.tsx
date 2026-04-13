@@ -222,7 +222,7 @@ export default function ApplyPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-white p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-white p-4">
         <div className="text-center max-w-md">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,7 +231,7 @@ export default function ApplyPage() {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">ใบสมัครของคุณได้รับแล้ว!</h1>
           <p className="text-gray-600 mb-4">
-            รหัสอ้างอิง: <span className="font-mono font-bold text-orange-500">AP-{success}</span>
+            รหัสอ้างอิง: <span className="font-mono font-bold text-[#C9252B]">AP-{success}</span>
           </p>
           <p className="text-gray-500 text-sm mb-6">ทีมงานจะติดต่อกลับภายใน 1 ชั่วโมง</p>
           <Link href="/apply" className="btn-primary inline-block">สมัครอีกครั้ง</Link>
@@ -245,7 +245,12 @@ export default function ApplyPage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-orange-500">AngpaoPay</Link>
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-[#C9252B] rounded-lg flex items-center justify-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-3 h-3 bg-[#D4AF37] rounded-bl-lg" />
+            </div>
+            <span className="text-lg font-bold text-[#C9252B]">อั่งเปาเพย์</span>
+          </Link>
           <span className="text-sm text-gray-500">สมัครเช่าซื้อ</span>
         </div>
       </header>
@@ -257,7 +262,7 @@ export default function ApplyPage() {
             <div key={s} className="flex items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                  step >= s ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-500"
+                  step >= s ? "bg-[#C9252B] text-white" : "bg-gray-200 text-gray-500"
                 }`}
               >
                 {step > s ? (
@@ -269,7 +274,7 @@ export default function ApplyPage() {
                 )}
               </div>
               {s < 4 && (
-                <div className={`w-12 sm:w-20 h-0.5 mx-1 ${step > s ? "bg-orange-500" : "bg-gray-200"}`} />
+                <div className={`w-12 sm:w-20 h-0.5 mx-1 ${step > s ? "bg-[#C9252B]" : "bg-gray-200"}`} />
               )}
             </div>
           ))}
@@ -299,7 +304,6 @@ export default function ApplyPage() {
                 { value: "all", label: "ทั้งหมด" },
                 { value: "iphone", label: "iPhone" },
                 { value: "ipad", label: "iPad" },
-                { value: "macbook", label: "MacBook" },
               ].map((c) => (
                 <button
                   key={c.value}
@@ -320,13 +324,13 @@ export default function ApplyPage() {
                     key={p.id}
                     className={`card text-left ${
                       selectedProduct?.id === p.id
-                        ? "ring-2 ring-orange-500 border-orange-500"
+                        ? "ring-2 ring-[#C9252B] border-[#C9252B]"
                         : ""
                     }`}
                     onClick={() => setSelectedProduct(p)}
                   >
                     <p className="font-medium text-sm">{p.name}</p>
-                    <p className="text-orange-500 font-bold mt-1">
+                    <p className="text-[#C9252B] font-bold mt-1">
                       ฿{formatNumber(p.price)}
                     </p>
                     <span className="badge bg-gray-100 text-gray-500 mt-1">
@@ -465,7 +469,7 @@ export default function ApplyPage() {
         {/* STEP 4 */}
         {step === 4 && (
           <div className="space-y-4">
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-sm text-orange-800">
+            <div className="bg-red-50 border border-[#D4AF37]/30 rounded-lg p-3 text-sm text-orange-800">
               ยิ่งมีเอกสารมาก ยิ่งได้เงื่อนไขดีกว่า
             </div>
 
@@ -521,7 +525,7 @@ export default function ApplyPage() {
                 id="agree"
                 checked={agree}
                 onChange={(e) => setAgree(e.target.checked)}
-                className="mt-1 accent-orange-500"
+                className="mt-1 accent-[#C9252B]"
               />
               <label htmlFor="agree" className="text-sm text-gray-600">
                 ข้าพเจ้ายืนยันว่าข้อมูลทั้งหมดเป็นความจริง และยินยอมให้ตรวจสอบข้อมูลเพื่อประกอบการพิจารณาสัญญาเช่าซื้อ
@@ -561,7 +565,7 @@ export default function ApplyPage() {
 
       {/* Footer */}
       <div className="fixed bottom-16 left-0 right-0 text-center pb-1">
-        <Link href="/admin" className="text-xs text-gray-400 hover:text-orange-500">
+        <Link href="/admin" className="text-xs text-gray-400 hover:text-[#C9252B]">
           สำหรับเจ้าหน้าที่ &rarr;
         </Link>
       </div>
@@ -581,9 +585,9 @@ function QuoteCard({
   rate: number;
 }) {
   return (
-    <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-4">
+    <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4">
       <p className="text-sm text-gray-600 mb-1">ค่างวดต่อเดือน</p>
-      <p className="text-3xl font-bold text-orange-500 mb-3">
+      <p className="text-3xl font-bold text-[#C9252B] mb-3">
         ฿{formatNumber(pricing.monthly)}
         <span className="text-sm text-gray-500 font-normal"> /เดือน</span>
       </p>
@@ -608,7 +612,7 @@ function QuoteCard({
           <span>ค่าธรรมเนียมลงทะเบียน</span>
           <span>฿{formatNumber(pricing.registration)}</span>
         </div>
-        <div className="flex justify-between font-bold text-gray-800 border-t border-orange-200 pt-1 mt-1">
+        <div className="flex justify-between font-bold text-gray-800 border-t border-[#D4AF37]/30 pt-1 mt-1">
           <span>ราคาเช่าซื้อรวมทั้งสิ้น</span>
           <span>฿{formatNumber(pricing.total)}</span>
         </div>

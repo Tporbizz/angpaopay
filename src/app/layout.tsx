@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Kanit, Sarabun } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const kanit = Kanit({
+  variable: "--font-kanit",
+  subsets: ["thai", "latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const sarabun = Sarabun({
+  variable: "--font-sarabun",
+  subsets: ["thai", "latin"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "AngpaoPay - สมัครเช่าซื้อมือถือ",
-  description: "สมัครเช่าซื้อ iPhone, iPad, MacBook ผ่อนสบาย อนุมัติไว",
+  title: "อั่งเปาเพย์ AngpaoPay - สมัครเช่าซื้อมือถือ",
+  description: "สมัครเช่าซื้อ iPhone, iPad ผ่อนสบาย อนุมัติไว ไม่ต้องใช้บัตรเครดิต",
 };
 
 export default function RootLayout({
@@ -23,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="th" className={`${kanit.variable} ${sarabun.variable}`}>
       <body className="min-h-screen bg-gray-50">{children}</body>
     </html>
   );

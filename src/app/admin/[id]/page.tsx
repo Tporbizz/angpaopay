@@ -166,7 +166,7 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div>
-      <Link href="/admin" className="text-sm text-gray-500 hover:text-orange-500 mb-4 inline-block">
+      <Link href="/admin" className="text-sm text-gray-500 hover:text-[#C9252B] mb-4 inline-block">
         &larr; กลับไปรายการ
       </Link>
 
@@ -209,7 +209,7 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
                 label="Social Media"
                 value={
                   app.social_url ? (
-                    <a href={app.social_url.startsWith("http") ? app.social_url : `https://${app.social_url}`} target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">
+                    <a href={app.social_url.startsWith("http") ? app.social_url : `https://${app.social_url}`} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">
                       {app.social_url}
                     </a>
                   ) : (
@@ -253,11 +253,11 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
             <div className="space-y-2 text-sm">
               {app.stmt_url ? (
                 <div className="flex items-center gap-2">
-                  <a href={app.stmt_url} target="_blank" rel="noopener noreferrer" className="text-orange-500 underline">
+                  <a href={app.stmt_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">
                     ดู Statement / สลิปเงินเดือน
                   </a>
                   {app.stmt_password && (
-                    <span className="badge bg-orange-100 text-orange-700 px-2 py-0.5">
+                    <span className="badge bg-red-100 text-[#C9252B] px-2 py-0.5">
                       Password: {app.stmt_password}
                     </span>
                   )}
@@ -266,7 +266,7 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
                 <p className="text-gray-400">ไม่มี Statement</p>
               )}
               {app.work_photo_url ? (
-                <a href={app.work_photo_url} target="_blank" rel="noopener noreferrer" className="text-orange-500 underline block">
+                <a href={app.work_photo_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline block">
                   ดูรูปถ่ายชุดทำงาน
                 </a>
               ) : (
@@ -279,9 +279,9 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
         {/* Section B+C - Quote & Decision */}
         <div className="space-y-4">
           {/* Quote */}
-          <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-xl p-5">
+          <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-5">
             <h2 className="font-semibold text-gray-800 mb-3">สรุปค่าใช้จ่าย</h2>
-            <p className="text-3xl font-bold text-orange-500 mb-3">
+            <p className="text-3xl font-bold text-[#C9252B] mb-3">
               ฿{fmt(pricing.monthly)}<span className="text-sm text-gray-500 font-normal"> /เดือน</span>
             </p>
             <div className="space-y-1 text-sm text-gray-600">
@@ -290,7 +290,7 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
               <div className="flex justify-between"><span>ค่าบริการเช่าใช้ทรัพย์สิน</span><span>฿{fmt(pricing.hireFee)}</span></div>
               <div className="flex justify-between"><span>ค่าบริการรายเดือน</span><span>฿{fmt(pricing.svcTotal)}</span></div>
               <div className="flex justify-between"><span>ค่าธรรมเนียมลงทะเบียน</span><span>฿{fmt(pricing.registration)}</span></div>
-              <div className="flex justify-between font-bold text-gray-800 border-t border-orange-200 pt-1 mt-1">
+              <div className="flex justify-between font-bold text-gray-800 border-t border-[#D4AF37]/30 pt-1 mt-1">
                 <span>รวมทั้งสิ้น</span><span>฿{fmt(pricing.total)}</span>
               </div>
             </div>

@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-sm px-6">
-        <h1 className="text-2xl font-bold text-center text-orange-500 mb-2">AngpaoPay</h1>
+        <h1 className="text-2xl font-bold text-center text-[#C9252B] mb-2">AngpaoPay</h1>
         <p className="text-center text-gray-500 mb-6">เข้าสู่ระบบแอดมิน</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input

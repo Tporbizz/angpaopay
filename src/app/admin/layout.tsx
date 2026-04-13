@@ -28,8 +28,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-14">
           <div className="flex items-center gap-6">
-            <Link href="/admin" className="text-xl font-bold text-orange-500">
-              AngpaoPay
+            <Link href="/admin" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#C9252B] rounded-lg flex items-center justify-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-3 h-3 bg-[#D4AF37] rounded-bl-lg" />
+              </div>
+              <span className="text-lg font-bold text-[#C9252B]">อั่งเปาเพย์</span>
             </Link>
             <div className="hidden sm:flex gap-1">
               {navItems.map((item) => (
@@ -38,7 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   href={item.href}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     pathname === item.href
-                      ? "bg-orange-50 text-orange-600"
+                      ? "bg-red-50 text-[#C9252B]"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -64,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               key={item.href}
               href={item.href}
               className={`flex-1 text-center py-2 text-xs font-medium ${
-                pathname === item.href ? "text-orange-600 border-b-2 border-orange-500" : "text-gray-500"
+                pathname === item.href ? "text-orange-600 border-b-2 border-[#C9252B]" : "text-gray-500"
               }`}
             >
               {item.label}

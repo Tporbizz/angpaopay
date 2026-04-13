@@ -210,8 +210,8 @@ export default function AdminProductsPage() {
           <p className="text-lg font-bold text-green-600">฿{fmt(stats.minPrice)}</p>
           <p className="text-xs text-gray-600">ราคาต่ำสุด</p>
         </div>
-        <div className="bg-orange-50 rounded-xl p-3">
-          <p className="text-lg font-bold text-orange-600">฿{fmt(stats.maxPrice)}</p>
+        <div className="bg-[#D4AF37]/10 rounded-xl p-3">
+          <p className="text-lg font-bold text-[#D4AF37]">฿{fmt(stats.maxPrice)}</p>
           <p className="text-xs text-gray-600">ราคาสูงสุด</p>
         </div>
       </div>
@@ -258,7 +258,7 @@ export default function AdminProductsPage() {
                         if (selectedIds.size === filtered.length) setSelectedIds(new Set());
                         else setSelectedIds(new Set(filtered.map((p) => p.id)));
                       }}
-                      className="accent-orange-500"
+                      className="accent-[#C9252B]"
                     />
                   </th>
                   <th className="p-3 text-left font-medium text-gray-600">สินค้า</th>
@@ -281,7 +281,7 @@ export default function AdminProductsPage() {
                         type="checkbox"
                         checked={selectedIds.has(product.id)}
                         onChange={() => toggleSelect(product.id)}
-                        className="accent-orange-500"
+                        className="accent-[#C9252B]"
                       />
                     </td>
                     <td className="p-3 font-medium">{product.name}</td>
@@ -303,7 +303,7 @@ export default function AdminProductsPage() {
                         />
                       ) : (
                         <button
-                          className="text-right font-medium hover:text-orange-500 cursor-pointer"
+                          className="text-right font-medium hover:text-[#C9252B] cursor-pointer"
                           onClick={() => startEdit(product)}
                         >
                           ฿{fmt(product.price)}
