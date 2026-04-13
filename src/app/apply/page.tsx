@@ -307,9 +307,9 @@ export default function ApplyPage() {
             </a>
           </div>
 
-          <Link href="/apply" className="text-sm text-gray-400 hover:text-[#C9252B] transition-colors">
+          <a href="/apply" className="text-sm text-gray-400 hover:text-[#C9252B] transition-colors">
             สมัครอีกครั้ง &rarr;
-          </Link>
+          </a>
         </div>
       </div>
     );

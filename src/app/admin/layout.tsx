@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   async function handleLogout() {
-    await fetch("/api/admin/logout", { method: "POST" });
+    await fetch("/api/auth/logout", { method: "POST" });
     router.push("/admin/login");
   }
 
