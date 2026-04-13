@@ -59,7 +59,7 @@ export default function ApplyPage() {
 
   // Step 1
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("iphone");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [downPct, setDownPct] = useState(0.2);
   const [months, setMonths] = useState(12);
@@ -306,7 +306,6 @@ export default function ApplyPage() {
 
             <div className="flex gap-2 mb-4 overflow-x-auto">
               {[
-                { value: "all", label: "ทั้งหมด" },
                 { value: "iphone", label: "iPhone" },
                 { value: "ipad", label: "iPad" },
               ].map((c) => (
@@ -324,25 +323,29 @@ export default function ApplyPage() {
               <p className="text-center text-gray-400 py-8">กำลังโหลด...</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                {filteredProducts.map((p) => (
-                  <button
-                    key={p.id}
-                    className={`card text-left ${
-                      selectedProduct?.id === p.id
-                        ? "ring-2 ring-[#C9252B] border-[#C9252B]"
-                        : ""
-                    }`}
-                    onClick={() => setSelectedProduct(p)}
-                  >
-                    <p className="font-medium text-sm">{p.name}</p>
-                    <p className="text-[#C9252B] font-bold mt-1">
-                      ฿{formatNumber(p.price)}
-                    </p>
-                    <span className="badge bg-gray-100 text-gray-500 mt-1">
-                      {p.category === "iphone" ? "iPhone" : p.category === "ipad" ? "iPad" : "MacBook"}
-                    </span>
-                  </button>
-                ))}
+                {filteredProducts.map((p) => {
+                  // Estimate: 30% down, 1.5%/month, 12 months
+                  const est = calculatePricing({ price: p.price, downPct: 0.3, months: 12, rate: 0.015 });
+                  return (
+                    <button
+                      key={p.id}
+                      className={`card text-left ${
+                        selectedProduct?.id === p.id
+                          ? "ring-2 ring-[#C9252B] border-[#C9252B]"
+                          : ""
+                      }`}
+                      onClick={() => setSelectedProduct(p)}
+                    >
+                      <p className="font-medium text-sm">{p.name}</p>
+                      <p className="text-[#C9252B] font-bold text-lg mt-1">
+                        ฿{formatNumber(p.price)}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        ผ่อนเริ่มต้น <span className="font-semibold text-[#C9252B]">฿{formatNumber(est.monthly)}/เดือน</span>
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             )}
 
@@ -378,7 +381,18 @@ export default function ApplyPage() {
                   </div>
                 </div>
 
-                {pricing && <QuoteCard pricing={pricing} months={months} downPct={downPct} rate={rate} />}
+                {pricing && (
+                  <div className="bg-gradient-to-br from-red-50 to-[#f0e4b8]/30 border border-[#D4AF37]/30 rounded-xl p-4 text-center">
+                    <p className="text-sm text-gray-600 mb-1">ค่างวดต่อเดือน</p>
+                    <p className="text-4xl font-bold text-[#C9252B]">
+                      ฿{formatNumber(pricing.monthly)}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      ดาวน์ ฿{formatNumber(pricing.downAmt)} | {months} งวด
+                    </p>
+                    <p className="text-xs text-gray-400 mt-2">กดถัดไปเพื่อกรอกใบสมัคร</p>
+                  </div>
+                )}
               </>
             )}
           </div>
