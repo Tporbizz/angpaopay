@@ -1,29 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
-    });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
 
-    if (res.ok) {
-      router.push("/admin");
-    } else {
-      setError("รหัสผ่านไม่ถูกต้อง");
+      if (res.ok) {
+        window.location.href = "/admin";
+      } else {
+        setError("รหัสผ่านไม่ถูกต้อง");
+      }
+    } catch {
+      setError("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
     }
     setLoading(false);
   }
@@ -31,7 +33,12 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-sm px-6">
-        <h1 className="text-2xl font-bold text-center text-[#C9252B] mb-2">AngpaoPay</h1>
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <div className="w-10 h-10 bg-[#C9252B] rounded-xl flex items-center justify-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-4 h-4 bg-[#D4AF37] rounded-bl-xl" />
+          </div>
+          <span className="text-xl font-bold text-[#C9252B]">อั่งเปาเพย์</span>
+        </div>
         <p className="text-center text-gray-500 mb-6">เข้าสู่ระบบแอดมิน</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
