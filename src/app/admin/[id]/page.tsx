@@ -38,6 +38,8 @@ interface Application {
   ref2_name: string;
   ref2_relation: string;
   ref2_phone: string;
+  id_card_front_url: string;
+  id_card_back_url: string;
   stmt_url: string;
   stmt_password: string;
   work_photo_url: string;
@@ -234,7 +236,7 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h2 className="font-semibold text-gray-800 mb-4">อาชีพและรายได้</h2>
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <InfoRow label="อาชีพ" value={JOB_LABELS[app.job_type] || app.job_type} />
+              <InfoRow label="อาชีพ" value={app.job_type?.startsWith("other:") ? `อื่นๆ: ${app.job_type.slice(6)}` : (JOB_LABELS[app.job_type] || app.job_type)} />
               <InfoRow label="สถานที่ทำงาน" value={app.workplace || "-"} />
               <InfoRow label="ระยะเวลาทำงาน" value={WORK_DURATION_LABELS[app.work_duration] || app.work_duration} />
               <InfoRow label="รายได้/เดือน" value={`฿${fmt(app.income)}`} />
@@ -260,6 +262,14 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h2 className="font-semibold text-gray-800 mb-4">เอกสาร</h2>
             <div className="space-y-2 text-sm">
+              <div className="flex gap-3">
+                {app.id_card_front_url ? (
+                  <a href={app.id_card_front_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">บัตรประชาชน (หน้า)</a>
+                ) : <span className="text-gray-400">ไม่มีรูปบัตร (หน้า)</span>}
+                {app.id_card_back_url ? (
+                  <a href={app.id_card_back_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">บัตรประชาชน (หลัง)</a>
+                ) : <span className="text-gray-400">ไม่มีรูปบัตร (หลัง)</span>}
+              </div>
               {app.stmt_url ? (
                 <div className="flex items-center gap-2">
                   <a href={app.stmt_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">

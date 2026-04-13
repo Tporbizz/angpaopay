@@ -18,7 +18,8 @@
       "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__execute_sql",
       "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__get_project_url",
       "mcp__ab920c75-27a8-431c-8c1e-dce5d3051fec__get_publishable_keys",
-      "Bash(vercel env:*)"
+      "Bash(vercel env:*)",
+      "Bash(curl -s -H \"Title: ทดสอบแจ้งเตือน!\" -H \"Priority: high\" -H \"Tags: white_check_mark\" -d \"ระบบแจ้งเตือนใบสมัคร AngpaoPay พร้อมใช้งานแล้ว!\" \"https://ntfy.sh/angpaopay-notify\")"
     ]
   }
 }

@@ -88,7 +88,12 @@ export default function ApplyPage() {
   const [ref2Relation, setRef2Relation] = useState("");
   const [ref2Phone, setRef2Phone] = useState("");
 
+  // Step 3 extra
+  const [jobOther, setJobOther] = useState("");
+
   // Step 4
+  const [idCardFrontFile, setIdCardFrontFile] = useState<File | null>(null);
+  const [idCardBackFile, setIdCardBackFile] = useState<File | null>(null);
   const [stmtFile, setStmtFile] = useState<File | null>(null);
   const [stmtPassword, setStmtPassword] = useState("");
   const [workPhotoFile, setWorkPhotoFile] = useState<File | null>(null);
@@ -138,8 +143,30 @@ export default function ApplyPage() {
     setSubmitting(true);
 
     try {
+      let idCardFrontUrl = "";
+      let idCardBackUrl = "";
       let stmtUrl = "";
       let workPhotoUrl = "";
+
+      if (idCardFrontFile) {
+        const ext = idCardFrontFile.name.split(".").pop();
+        const path = `id-cards/${Date.now()}-front.${ext}`;
+        const { error } = await supabase.storage.from("documents").upload(path, idCardFrontFile);
+        if (!error) {
+          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
+          idCardFrontUrl = urlData.publicUrl;
+        }
+      }
+
+      if (idCardBackFile) {
+        const ext = idCardBackFile.name.split(".").pop();
+        const path = `id-cards/${Date.now()}-back.${ext}`;
+        const { error } = await supabase.storage.from("documents").upload(path, idCardBackFile);
+        if (!error) {
+          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(path);
+          idCardBackUrl = urlData.publicUrl;
+        }
+      }
 
       if (stmtFile) {
         const ext = stmtFile.name.split(".").pop();
@@ -195,7 +222,9 @@ export default function ApplyPage() {
           instagram,
           address,
           residence_type: residenceType,
-          job_type: jobType,
+          job_type: jobType === "other" ? `other:${jobOther}` : jobType,
+          id_card_front_url: idCardFrontUrl,
+          id_card_back_url: idCardBackUrl,
           workplace,
           work_duration: workDuration,
           income: parseInt(income),
@@ -462,6 +491,12 @@ export default function ApplyPage() {
                 {JOB_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </div>
+            {jobType === "other" && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">ระบุอาชีพ *</label>
+                <input className="input-field" value={jobOther} onChange={(e) => setJobOther(e.target.value)} placeholder="เช่น ช่างภาพ, ยูทูบเบอร์" />
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">สถานที่ทำงาน + เบอร์โทรที่ทำงาน</label>
               <input className="input-field" value={workplace} onChange={(e) => setWorkplace(e.target.value)} placeholder="ชื่อบริษัท/ร้าน + เบอร์โทร" />
@@ -503,6 +538,31 @@ export default function ApplyPage() {
           <div className="space-y-4">
             <div className="bg-red-50 border border-[#D4AF37]/30 rounded-lg p-3 text-sm text-[#C9252B]">
               ยิ่งมีเอกสารมาก ยิ่งได้เงื่อนไขดีกว่า
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  รูปบัตรประชาชน (ด้านหน้า)
+                </label>
+                <input
+                  type="file"
+                  accept=".jpg,.jpeg,.png"
+                  onChange={(e) => setIdCardFrontFile(e.target.files?.[0] || null)}
+                  className="input-field text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  รูปบัตรประชาชน (ด้านหลัง)
+                </label>
+                <input
+                  type="file"
+                  accept=".jpg,.jpeg,.png"
+                  onChange={(e) => setIdCardBackFile(e.target.files?.[0] || null)}
+                  className="input-field text-sm"
+                />
+              </div>
             </div>
 
             <div>
