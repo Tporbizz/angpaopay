@@ -18,5 +18,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const proxyConfig = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin", "/admin/((?!login).*)"],
 };

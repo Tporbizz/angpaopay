@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
-import { calculatePricing, getBaseRate } from "@/lib/pricing";
+import { calculatePricing } from "@/lib/pricing";
 import { calculateAutoScore } from "@/lib/scoring";
 import Link from "next/link";
 
@@ -13,7 +13,7 @@ interface Product {
   price: number;
 }
 
-const DOWN_OPTIONS = [0.15, 0.2, 0.25, 0.3];
+const DOWN_OPTIONS = [0.25, 0.3, 0.4, 0.5];
 const FIXED_MONTHS = 12;
 
 const JOB_OPTIONS = [
@@ -61,7 +61,8 @@ export default function ApplyPage() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("iphone");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [downPct, setDownPct] = useState(0.2);
+  const [downPct, setDownPct] = useState(0.3);
+  const [rates, setRates] = useState<Record<string, number>>({ "0.25": 0.03, "0.30": 0.015, "0.40": 0.015, "0.50": 0.01 });
   const months = FIXED_MONTHS;
 
   // Step 2
@@ -94,15 +95,14 @@ export default function ApplyPage() {
   const [agree, setAgree] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from("products")
-      .select("*")
-      .eq("active", true)
-      .order("sort_order")
-      .then(({ data }) => {
-        if (data) setProducts(data);
-        setLoading(false);
-      });
+    Promise.all([
+      supabase.from("products").select("*").eq("active", true).order("sort_order"),
+      supabase.from("settings").select("*").eq("key", "rates").single(),
+    ]).then(([prodRes, rateRes]) => {
+      if (prodRes.data) setProducts(prodRes.data);
+      if (rateRes.data) setRates(rateRes.data.value as Record<string, number>);
+      setLoading(false);
+    });
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -113,7 +113,7 @@ export default function ApplyPage() {
     });
   }, [products, search, categoryFilter]);
 
-  const rate = getBaseRate(downPct);
+  const rate = rates[downPct.toFixed(2)] ?? rates[String(downPct)] ?? 0.03;
   const pricing = selectedProduct
     ? calculatePricing({ price: selectedProduct.price, downPct, months, rate })
     : null;
