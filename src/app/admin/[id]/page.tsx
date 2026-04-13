@@ -260,39 +260,56 @@ export default function AdminDetailPage({ params }: { params: Promise<{ id: stri
           </div>
 
           <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <h2 className="font-semibold text-gray-800 mb-4">เอกสาร</h2>
-            <div className="space-y-2 text-sm">
-              <div className="flex gap-3">
-                {app.id_card_front_url ? (
-                  <a href={app.id_card_front_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">บัตรประชาชน (หน้า)</a>
-                ) : <span className="text-gray-400">ไม่มีรูปบัตร (หน้า)</span>}
-                {app.id_card_back_url ? (
-                  <a href={app.id_card_back_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">บัตรประชาชน (หลัง)</a>
-                ) : <span className="text-gray-400">ไม่มีรูปบัตร (หลัง)</span>}
-              </div>
-              {app.stmt_url ? (
-                <div className="flex items-center gap-2">
-                  <a href={app.stmt_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">
-                    ดู Statement / สลิปเงินเดือน
+            <h2 className="font-semibold text-gray-800 mb-4">บัตรประชาชน</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {app.id_card_front_url ? (
+                <a href={app.id_card_front_url} target="_blank" rel="noopener noreferrer">
+                  <p className="text-xs text-gray-500 mb-1">ด้านหน้า</p>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={app.id_card_front_url} alt="บัตรด้านหน้า" className="w-full rounded-lg border border-gray-200 object-cover max-h-48" />
+                </a>
+              ) : <p className="text-gray-400 text-sm">ไม่มีรูปบัตร (หน้า)</p>}
+              {app.id_card_back_url ? (
+                <a href={app.id_card_back_url} target="_blank" rel="noopener noreferrer">
+                  <p className="text-xs text-gray-500 mb-1">ด้านหลัง</p>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={app.id_card_back_url} alt="บัตรด้านหลัง" className="w-full rounded-lg border border-gray-200 object-cover max-h-48" />
+                </a>
+              ) : <p className="text-gray-400 text-sm">ไม่มีรูปบัตร (หลัง)</p>}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h2 className="font-semibold text-gray-800 mb-4">เอกสารอื่นๆ</h2>
+            <div className="space-y-3 text-sm">
+              {app.work_photo_url ? (
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">รูปถ่ายชุดทำงาน</p>
+                  <a href={app.work_photo_url} target="_blank" rel="noopener noreferrer">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={app.work_photo_url} alt="รูปชุดทำงาน" className="w-48 rounded-lg border border-gray-200 object-cover max-h-48" />
                   </a>
-                  {app.stmt_password && (
-                    <span className="badge bg-red-100 text-[#C9252B] px-2 py-0.5">
-                      Password: {app.stmt_password}
-                    </span>
-                  )}
+                </div>
+              ) : <p className="text-gray-400">ไม่มีรูปถ่ายชุดทำงาน</p>}
+              {app.stmt_url ? (
+                <div>
+                  <div className="flex items-center gap-2">
+                    <a href={app.stmt_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline">
+                      ดู Statement / สลิปเงินเดือน
+                    </a>
+                    {app.stmt_password && (
+                      <span className="badge bg-red-100 text-[#C9252B] px-2 py-0.5">
+                        Password: {app.stmt_password}
+                      </span>
+                    )}
+                  </div>
                 </div>
               ) : (
                 <p className="text-gray-400">ไม่มี Statement</p>
               )}
-              {app.work_photo_url ? (
-                <a href={app.work_photo_url} target="_blank" rel="noopener noreferrer" className="text-[#C9252B] underline block">
-                  ดูรูปถ่ายชุดทำงาน
-                </a>
-              ) : (
-                <p className="text-gray-400">ไม่มีรูปถ่ายชุดทำงาน</p>
-              )}
             </div>
           </div>
+
         </div>
 
         {/* Section B+C - Quote & Decision */}
